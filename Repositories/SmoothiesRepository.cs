@@ -60,8 +60,7 @@ namespace burgershack.Repositories
     public Smoothie Update(Smoothie smoothie)
     {
       _db.Execute(@"
-      UPDATE Smoothies SET (name, descriptions, price
-      VALUES (@Name, @Description, @Price)
+      UPDATE Smoothies SET name = @Name, description = @Description, price = @Price
       WHERE id = @Id;", smoothie);
       return smoothie;
     }

@@ -9,14 +9,23 @@ namespace burgershack.Controllers
   //specify route, [controller] == Fries in this case, controller name
   [Route("api/[controller]")]
   [ApiController]
-  public class FriesController : Controller
+  public class FriesController : ControllerBase
   {
     private FriesRepository _repo;
 
+
+    //Get all fries
     [HttpGet]
     public IEnumerable<Fries> Get()
     {
       return _repo.GetAll();
+    }
+
+    //get fries by id
+    [HttpGet("{id}")]
+    public Fries GetFriesById([FromRoute] int id)
+    {
+      return _repo.GetById(id);
     }
 
     //for post, can bring in a route parameter and a single data object
@@ -29,11 +38,11 @@ namespace burgershack.Controllers
         fries = new Fries(fries.Name, fries.Description, fries.Price);
         return _repo.Create(fries);
       }
-      throw new Exception("INVALID FRIES");
+      throw new Exception("INVALID FRIES OBJECT");
     }
 
     // PUT api/values/5
-    [HttpPut("{id}")]
+    [HttpPut]
     public void Put([FromBody] Fries fries)
     {
       _repo.Update(fries);
@@ -41,7 +50,7 @@ namespace burgershack.Controllers
 
     // DELETE api/values/5
     [HttpDelete("{id}")]
-    public void Delete(int id)
+    public void Delete([FromRoute] int id)
     {
       _repo.Delete(id);
 

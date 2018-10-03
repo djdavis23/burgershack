@@ -25,7 +25,7 @@ namespace burgershack.Repositories
     //GET FRIES BY ID
     public Fries GetById(int id)
     {
-      return _db.Query<Fries>("SELECT * FROM Fries WHERE id=@id;", new { id }).FirstOrDefault();
+      return _db.Query<Fries>("SELECT * FROM Fries WHERE id = @id;", new { id }).FirstOrDefault();
     }
 
     //CREATE FRIES
@@ -33,32 +33,26 @@ namespace burgershack.Repositories
     {
       int id = _db.ExecuteScalar<int>(@"
       INSERT INTO Fries (name, description, price)
-      VALUES (@Name, @Description), @Price);
-      SELECT LAST_INSERT_ID()", fries);
+      VALUES (@Name, @Description, @Price);
+      SELECT LAST_INSERT_ID();", fries);
       fries.Id = id;
       return fries;
     }
     //UPDATE FRIES BY ID
+    //Better practice for put and delete to return #rows modified as returned
+    //from Execute?????
     public Fries Update(Fries fries)
     {
       _db.Execute(@"
-        UPDATE Fries SET (name, description, price)
-        VALUES (@Name, @Description, @Price)
-        WHERE id=@id;
-      ", fries);
+        UPDATE Fries SET name = @Name, description = @Description, price = @Price
+        WHERE id = @Id;", fries);
       return fries;
     }
 
-    //DELETE FRIES BY ID
-    public Fries Delete(Fries fries)
-    {
-      _db.Execute("DELETE FROM Fries WHERE id=@Id", fries);
-      return fries;
-    }
-
+    //DELETE FRIES BY ID   
     public int Delete(int id)
     {
-      return _db.Execute("DELETE FROM Fries WHERE id=@id", new { id });
+      return _db.Execute("DELETE FROM Fries WHERE id = @id", new { id });
     }
   }
 }

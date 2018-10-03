@@ -9,7 +9,7 @@ namespace burgershack.Controllers
 
   [Route("api/[controller]")]
   [ApiController]
-  public class BurgersController : Controller
+  public class BurgersController : ControllerBase
   {
     private BurgersRepository _repo;
 
@@ -17,6 +17,13 @@ namespace burgershack.Controllers
     public IEnumerable<Burger> Get()
     {
       return _repo.GetAll(); ;
+    }
+
+    //get burgerk by id
+    [HttpGet("{id}")]
+    public Burger GetBurgerById([FromRoute] int id)
+    {
+      return _repo.GetById(id);
     }
 
     //for post, can bring in a route parameter and a single data object
@@ -29,11 +36,11 @@ namespace burgershack.Controllers
         burger = new Burger(burger.Name, burger.Description, burger.Price);
         return _repo.Create(burger);
       }
-      throw new Exception("INVALID BURGER");
+      throw new Exception("INVALID BURGER OBJECT");
     }
 
     // PUT api/values/5
-    [HttpPut("{id}")]
+    [HttpPut]
     public void Put([FromBody] Burger burger)
     {
       _repo.Update(burger);
@@ -41,7 +48,7 @@ namespace burgershack.Controllers
 
     // DELETE api/values/5
     [HttpDelete("{id}")]
-    public void Delete(int id)
+    public void Delete([FromRoute] int id)
     {
       _repo.Delete(id);
 
